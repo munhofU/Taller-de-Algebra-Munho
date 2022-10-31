@@ -2,11 +2,12 @@
 -- Munhó Vital Facundo Nicolas
 -- Yañez Carolina 
 
--- auxiliares
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
-{-# HLINT ignore "Eta reduce" #-}
-{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 
+type Complejo = (Float, Float)
+-- defino a los complejos z pertencientes a C z=a+ib como 
+-- el par z perteneciente a R2 z=(a,b)
+
+-- auxiliares
 -- defino la funcion signo 
 signo :: Float -> Float
 signo a | a >= 0 = 1
@@ -45,11 +46,9 @@ algunamenor [] _ = False
 algunamenor (z:zs) k | z < k = True
                      | otherwise = algunamenor zs k
 
-type Complejo = (Float, Float)
--- defino a los complejos z pertencientes a C z=a+ib como 
--- el par z perteneciente a R2 z=(a,b)
---
-
+--------------------------------------------------------------------------------------------------------------------------------
+-- 1
+-------------------------------------------------------------------------------------------------------------------------------
 -- aplico la definicion de parte real
 re :: Complejo -> Float
 re (a,_) = a
@@ -90,6 +89,9 @@ raicesCuadratica a b c | w >= 0 = ( ((-b)/(2*a)+ sqrt w,0) , ((-b)/(2*a)- sqrt w
                        | otherwise =  ( ((-b)/(2*a), sqrt(sqrt (w**2))/(2*a)) , ((-b)/(2*a),-sqrt(sqrt (w**2))/(2*a)) )
                         where  w = b**2 - 4 * a * c
 
+--------------------------------------------------------------------------------------------------------------------------------
+-- 2
+-------------------------------------------------------------------------------------------------------------------------------
 
 -- aplico la defincion de modulo, el re es un formalismo para que producto sea un flotante
 modulo :: Complejo -> Float
@@ -119,6 +121,10 @@ raizCuadrada z = (pasarACartesianas (sqrt (modulo z)) (argumento z/2),pasarACart
 raicesCuadraticaCompleja :: Complejo -> Complejo -> Complejo -> (Complejo,Complejo)
 raicesCuadraticaCompleja a b c = (cociente (suma (productoescalar (-1) b) w1) (productoescalar 2 a),cociente (suma (productoescalar (-1) b) w2) (productoescalar 2 a))
                                 where  (w1,w2) = raizCuadrada (suma (potencia b 2)  (productoescalar (-4) (producto a c)))
+
+--------------------------------------------------------------------------------------------------------------------------------
+-- 3
+-------------------------------------------------------------------------------------------------------------------------------
 
 -- aplico la funcion auxialiar hasta n
 raicesNesimas :: Int -> [Complejo]
