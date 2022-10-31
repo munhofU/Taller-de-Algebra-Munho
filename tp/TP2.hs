@@ -3,12 +3,19 @@
 -- Yañez Carolina 
 
 -- auxiliares
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Eta reduce" #-}
+{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 signo :: Float -> Float
 signo a | a >= 0 = 1
         | otherwise = -1
 
 productoescalar:: Float -> Complejo -> Complejo
 productoescalar k (a,b) = (k*a,k*b)
+
+raicesNEsimashasta :: Int -> Int -> [Complejo]
+raicesNEsimashasta n 0 = [(cos (2*pi*0/fromIntegral n), sin (2*pi*0/fromIntegral n))]
+raicesNEsimashasta n k = (cos (2*pi* (fromIntegral k/fromIntegral n)), sin (2*pi*(fromIntegral k/fromIntegral n))):raicesNEsimashasta n (k-1)
 
 
 type Complejo = (Float, Float)
@@ -68,3 +75,20 @@ raicesCuadraticaCompleja :: Complejo -> Complejo -> Complejo -> (Complejo,Comple
 raicesCuadraticaCompleja a b c = (cociente (suma (productoescalar (-1) b) w1) (productoescalar 2 a),cociente (suma (productoescalar (-1) b) w2) (productoescalar 2 a))
                                 where  (w1,w2) = raizCuadrada (suma (potencia b 2)  (productoescalar (-4) (producto a c)))
 
+
+raicesNesimas :: Int -> [Complejo]
+raicesNesimas n = raicesNEsimashasta n (n-1)
+
+distancias:: [Complejo] -> [Complejo] -> [Float]
+distancias [] [] = []
+distancias [] (y:ys) = 0 : distancias [] ys
+distancias (z:zs) [] = 0 : distancias zs []
+distancias (z:zs) (y:ys) = distancia z y : distancias zs ys
+
+todasmenores:: [Float] -> Float-> Bool
+todasmenores [] _ = True
+todasmenores (z:zs) k | z > k = False
+                      | otherwise = todasmenores zs k
+
+sonRaicesNesimas :: Int -> [Complejo] -> Float -> Bool
+sonRaicesNesimas n zs eps = todasmenores (distancias (raicesNesimas n) zs) eps
